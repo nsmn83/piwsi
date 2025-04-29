@@ -9,6 +9,7 @@ class Book(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
+    category = models.CharField(max_length=50, default="none")
     description = models.TextField(blank=True)
     published_date = models.DateField()
 
@@ -20,7 +21,6 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='reviews')
     content = models.TextField()
-    rating = models.IntegerField(choices=[(i, i) for i in range(1, 6)])
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
