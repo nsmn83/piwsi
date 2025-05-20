@@ -2,11 +2,11 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import Review, Book, Author
-from .serializers import ReviewSerializer, BookSerializer, AuthorSerializer
+from .serializers import ReviewSerializer, BookListSerializer, BookDetailSerializer, AuthorSerializer
 
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
-    serializer_class = BookSerializer
+    serializer_class = BookListSerializer
 
 class BookReviewList(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
@@ -27,7 +27,7 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class BookDetailView(generics.RetrieveAPIView):
     queryset = Book.objects.all()
-    serializer_class = BookSerializer
+    serializer_class = BookDetailSerializer
     permission_classes = [permissions.AllowAny]
 
 class ReviewCreateView(generics.CreateAPIView):

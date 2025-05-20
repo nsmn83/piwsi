@@ -17,7 +17,6 @@ class Book(models.Model):
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     category = models.CharField(max_length=50, default="none")
     description = models.TextField(blank=True)
-    opinion = models.TextField(default='Pozytywny')  # opinia liczona na podstawie sentymentu z recenzji
     published_date = models.DateField()
 
     def __str__(self):
@@ -27,6 +26,7 @@ class Book(models.Model):
 class Review(models.Model):
     book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    sentiment = models.CharField(max_length=20, default='neutral')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 

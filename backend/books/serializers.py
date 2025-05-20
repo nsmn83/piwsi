@@ -2,14 +2,34 @@ from rest_framework import serializers
 from accounts.serializers import UserSummarySerializer
 from .models import Book, Review, Author
 
-class BookSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.name', read_only=True)
+class BookListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'author_name', 'opinion', 'category', 'description', 'published_date']
+        fields = ['id', 'title', 'author', 'category']
+
+
+class BookDetailSerializer(serializers.ModelSerializer):
+    author_name = serializers.CharField(source='author.name', read_only=True)
+    reviews = serializers.SerializerMethodField()
+    class Meta:
+        model = Book
+        fields = ['id', 'title', 'author', 'author_name', 'reviews', 'category', 'description', 'published_date']
+
+    def get_reviews(self, obj):
+        reviews = Review.objects.filter(book=obj)
+        sentiment_counts = {
+            'positive': 0,
+            'negative': 0,
+            'neutral': 0
+        }
+
+        for review in reviews:
+            sentiment_counts[review.sentiment] += 1
+
+        return sentiment_counts
 
 class ReviewSerializer(serializers.ModelSerializer):
-    book = BookSerializer(read_only=True)  # Pełne dane książki
+    book = BookListSerializer(read_only=True)  # Pełne dane książki
     user = UserSummarySerializer(read_only=True)
 
     class Meta:
