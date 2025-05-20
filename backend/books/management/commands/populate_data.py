@@ -75,5 +75,4 @@ class Command(BaseCommand):
                             if random.randint(0, 1) else
                             "Nie podobało mi się, książka jest tragicznie napisana, najgorsze co w życiu czytałem"
                         ),
-                        rating="Pozytywny odbiór"  # Przykładowa ocena od 1 do 5
                     )

@@ -8,4 +8,10 @@ urlpatterns = [
     path("logout/", UserLogoutAPIView.as_view(), name="logout-user"),
     path("token/refresh", TokenRefreshView.as_view(), name="token-refresh"),
     path("user/", UserInfoAPIView.as_view(), name="user-info"),
+
+    #Publiczny profil - podstawowe informacje o uzytkowniku
+    path("user/<int:pk>/", UserPublicInfoAPIView.as_view(), name="public-user-info"),
+
+    #Aktualizacja opisu użytkownika
+    path("user/edit-bio/", UpdateBioAPIView.as_view(), name="edit-bio"),
 ]

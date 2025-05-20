@@ -1,9 +1,8 @@
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from .models import Review, Book
-from .serializers import ReviewSerializer
-from .serializers import BookSerializer
+from .models import Review, Book, Author
+from .serializers import ReviewSerializer, BookSerializer, AuthorSerializer
 
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
@@ -26,6 +25,10 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ReviewSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+class BookDetailView(generics.RetrieveAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.AllowAny]
 
 class ReviewCreateView(generics.CreateAPIView):
     serializer_class = ReviewSerializer
@@ -61,3 +64,27 @@ class ReviewUpdateView(generics.UpdateAPIView):
 
     def perform_update(self, serializer):
         serializer.save(user=self.request.user)  # Zapobiegaj zmianie autora
+
+class ReviewDeleteView(generics.DestroyAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
+    permissions_classes = [permissions.IsAuthenticated]
+
+    def get_object(self):
+        review = super().get_object()
+        if review.user != self.request.user and not self.request.user.is_staff:
+            self.permission_denied(self.request)
+        return review
+
+class AuthorDetailView(generics.RetrieveAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [permissions.AllowAny]
+
+class UserReviewListView(generics.ListAPIView):
+    serializer_class = ReviewSerializer
+    permission_classes = [permissions.AllowAny]
+
+    def get_queryset(self):
+        user_id = self.kwargs['user_id']
+        return Review.objects.filter(user__id=user_id)
