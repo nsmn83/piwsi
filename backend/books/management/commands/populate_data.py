@@ -63,16 +63,23 @@ class Command(BaseCommand):
         users = list(CustomUser.objects.all())
         books = list(Book.objects.all())
 
+        review_texts = [
+            "Świetna książka! Lubię do niej wracać, wartka akcja i mądre przesłanie.",
+            "Nie podobało mi się, książka jest tragicznie napisana, najgorsze co w życiu czytałem.",
+            "Fascynująca historia, nie mogłem się oderwać. Ciekawi bohaterowie i wciągająca fabuła.",
+            "Trochę nudna i przewidywalna, ale ma swoje momenty. Ogólnie okej, ale nic specjalnego",
+            "Polecam każdemu fanowi gatunku, bardzo dobra robota autora!"
+            "Średnia - nie zachwyca, ale też nie jest zła. Przeciętna książka.",
+        ]
+
+
         for user in users:
             reviewed_books = random.sample(books, 5)
             for book in reviewed_books:
+                content = random.choice(review_texts)
                 if not Review.objects.filter(user=user, book=book).exists():
                     Review.objects.create(
                         user=user,
                         book=book,
-                        content=(
-                            "Świetna książka! Lubię do niej wracać, wartka akcja i mądre przesłanie"
-                            if random.randint(0, 1) else
-                            "Nie podobało mi się, książka jest tragicznie napisana, najgorsze co w życiu czytałem"
-                        ),
+                        content=content
                     )
