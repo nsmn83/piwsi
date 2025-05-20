@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import GenericAPIView, RetrieveAPIView
+from rest_framework.generics import GenericAPIView, RetrieveAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from .serializers import *
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -56,3 +56,6 @@ class UserInfoAPIView(RetrieveAPIView):
     #Nadpisanie metody by zwróciła zalogowane użytkownika
     def get_object(self):
         return self.request.user
+
+    def get_object(self):
+        return self.get_queryset().get(id=self.kwargs["id"])

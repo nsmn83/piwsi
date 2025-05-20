@@ -1,20 +1,23 @@
-# populate_data.py
 import os
 import django
 from django.core.management import BaseCommand
 
-# Ustawienia projektu django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")  # Zamień 'backend' na nazwę swojego projektu
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend.settings")
 django.setup()
 
-# Import modeli - środowisko zgłasza błąd ale skrypt działa bo django.setup() dynamicznie ustawia potrzebne scieżki
-from books.models import Book, Review
+from books.models import Book, Review, Author  # dodano Author
 from accounts.models import CustomUser
 import random
 from datetime import date, timedelta
 
+
 class Command(BaseCommand):
     def handle(self, *args, **kwargs):
+        Review.objects.all().delete()
+        Book.objects.all().delete()
+        Author.objects.all().delete()
+
+
         first_names = [
             "Anna", "Bartek", "Cezary", "Daria", "Ewelina",
             "Filip", "Grzegorz", "Halina", "Igor", "Julia"
@@ -37,14 +40,16 @@ class Command(BaseCommand):
         for name in first_names:
             email = f"{name.lower()}@gmail.com"
             if not CustomUser.objects.filter(email=email).exists():
-                user = CustomUser.objects.create_user(
+                CustomUser.objects.create_user(
                     username=name.lower(),
                     email=email,
                     password="test"
                 )
 
-        # Tworzenie książek
-        for title, author, category in books_data:
+        # Tworzenie książek i autorów
+        for title, author_name, category in books_data:
+            author, _ = Author.objects.get_or_create(name=author_name)
+
             if not Book.objects.filter(title=title).exists():
                 Book.objects.create(
                     title=title,
@@ -65,8 +70,10 @@ class Command(BaseCommand):
                     Review.objects.create(
                         user=user,
                         book=book,
-                        content=
-                        "Świetna książka! Lubię do niej wracać, wartka akcja i mądre przesłanie"
-                        if random.randint(0, 1) else
-                        "Nie podobało mi się, książka jest tragicznie napisana, najgorsze co w życiu czytałem",
+                        content=(
+                            "Świetna książka! Lubię do niej wracać, wartka akcja i mądre przesłanie"
+                            if random.randint(0, 1) else
+                            "Nie podobało mi się, książka jest tragicznie napisana, najgorsze co w życiu czytałem"
+                        ),
+                        rating="Pozytywny odbiór"  # Przykładowa ocena od 1 do 5
                     )

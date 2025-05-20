@@ -1,11 +1,12 @@
 from .models import CustomUser
 from rest_framework import serializers
 from django.contrib.auth import  authenticate
+from .models import CustomUser
 
 class CustomUSerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ("id", "username", "email")
+        fields = ("id", "username", "email", "bio")
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
@@ -40,3 +41,7 @@ class UserLoginSerializer(serializers.Serializer):
             return  user
         raise serializers.ValidationError("Złe wartości!")
 
+class UserSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ("username", "bio")
