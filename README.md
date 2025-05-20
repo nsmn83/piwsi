@@ -21,7 +21,7 @@ Uruchomienie projektu lokalnie (backendu) - opis dla brancha simple-data
 
 1. W folderze /backend stwórz lub uruchom wirtualne środowisko<br>
 2. Wpisz komendę pip install -r requirements.txt<br>
-3. Wpisz komendę python manage.py makemigrations<br>
+3. Wpisz komendę python manage.py makemigrations  (może być wymagane usunięcie starej bazy del db.sqlite3)<br>
 4. Wpisz komendę python manage.py migrate
 5. Stwórz superusera: python manage.py createsuperuser, najlepiej coś prostego typu username='admin', password='test'<br>
 6. Uruchom skrpyt, który wrzuci dane do bazy (na razie zostawilem sqlite3, żeby nie odpalać postgresa lokalnie): python manage.py populate_data<br>
