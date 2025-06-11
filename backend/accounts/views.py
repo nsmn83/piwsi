@@ -57,9 +57,6 @@ class UserInfoAPIView(RetrieveAPIView):
     def get_object(self):
         return self.request.user
 
-    def get_object(self):
-        return self.get_queryset().get(id=self.kwargs["id"])
-
 class UserPublicInfoAPIView(RetrieveAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSummarySerializer

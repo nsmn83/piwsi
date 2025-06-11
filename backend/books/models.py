@@ -14,8 +14,8 @@ class Author(models.Model):
 
 
 class Book(models.Model):
-    title = models.CharField(max_length=200)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
+    title = models.CharField(max_length=200)
     category = models.CharField(max_length=50, default="none")
     description = models.TextField(blank=True)
     published_date = models.DateField()
@@ -25,8 +25,8 @@ class Book(models.Model):
 
 
 class Review(models.Model):
-    book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, related_name='reviews', on_delete=models.CASCADE)
     sentiment = models.CharField(max_length=20, default='neutral')
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)

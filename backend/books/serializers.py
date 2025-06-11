@@ -1,51 +1,36 @@
-from rest_framework import serializers
-from accounts.serializers import UserSummarySerializer
+from accounts.serializers import CustomUSerSerializer
 from .models import Book, Review, Author
+from rest_framework import serializers
+
+class AuthorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Author
+        fields = '__all__'
 
 class BookListSerializer(serializers.ModelSerializer):
+    author = AuthorSerializer(read_only=True)
+
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'category']
-
+        fields = '__all__'
 
 class BookDetailSerializer(serializers.ModelSerializer):
-    author_name = serializers.CharField(source='author.name', read_only=True)
+    author = AuthorSerializer(read_only=True)
     reviews = serializers.SerializerMethodField()
+
     class Meta:
         model = Book
-        fields = ['id', 'title', 'author', 'author_name', 'reviews', 'category', 'description', 'published_date']
+        fields = '__all__'
 
     def get_reviews(self, obj):
         reviews = Review.objects.filter(book=obj)
-        sentiment_counts = {
-            'positive': 0,
-            'negative': 0,
-            'neutral': 0
-        }
-
-        for review in reviews:
-            sentiment_counts[review.sentiment] += 1
-
-        return sentiment_counts
+        return ReviewSerializer(reviews, many=True).data
 
 class ReviewSerializer(serializers.ModelSerializer):
-
-    # Dane książki (potrzebne jeśli np. chcemy wyswietlic review uzytkownika
-    # w jego profilu wraz z tytulem książki)
     book = BookListSerializer(read_only=True)
-
-    user = UserSummarySerializer(read_only=True)
+    user = CustomUSerSerializer(read_only=True)
 
     class Meta:
         model = Review
-        fields = ['book', 'id', 'content', 'created_at', 'user']
-        read_only_fields = ['user', 'book']  # Blokada zmian
-
-class AuthorSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Author
-        fields = ['name', 'description', 'nationality', 'birth_date']
-
-    def __str__(self):
-        return self.name
+        fields = '__all__'
+        read_only_fields = ['user', 'book']
