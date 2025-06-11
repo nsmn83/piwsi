@@ -14,6 +14,26 @@ class BookListSerializer(serializers.ModelSerializer):
         model = Book
         fields = '__all__'
 
+class ReviewWithoutBookSerializer(serializers.ModelSerializer):
+    user = CustomUSerSerializer(read_only=True)
+
+    class Meta:
+        model = Review
+        # wypisz tylko te pola, które chcesz zwrócić, bez 'book'
+        fields = ['id', 'user', 'sentiment', 'content', 'created_at']
+        read_only_fields = ['user']
+
+
+class ReviewWithBookSerializer(serializers.ModelSerializer):
+    book = BookListSerializer(read_only=True)  # Zawiera dane o książce
+    user = CustomUSerSerializer(read_only=True)
+
+    class Meta:
+        model = Review
+        fields = '__all__'
+        read_only_fields = ['user', 'book']
+
+
 class BookDetailSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     reviews = serializers.SerializerMethodField()

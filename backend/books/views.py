@@ -4,13 +4,14 @@ from rest_framework.response import Response
 from .models import Review, Book, Author
 from .recommendations import recommend_books
 from .serializers import ReviewSerializer, BookListSerializer, BookDetailSerializer, AuthorSerializer
+from .serializers import ReviewWithoutBookSerializer, ReviewWithBookSerializer
 
 class BookListView(generics.ListAPIView):
     queryset = Book.objects.all()
     serializer_class = BookListSerializer
 
 class BookReviewList(generics.ListCreateAPIView):
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewWithoutBookSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get_queryset(self):
@@ -20,6 +21,7 @@ class BookReviewList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         book = Book.objects.get(id=self.kwargs['book_id'])
         serializer.save(user=self.request.user, book=book)
+
 
 class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
@@ -83,12 +85,13 @@ class AuthorDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.AllowAny]
 
 class UserReviewListView(generics.ListAPIView):
-    serializer_class = ReviewSerializer
+    serializer_class = ReviewWithBookSerializer  # <-- tutaj
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return Review.objects.filter(user__id=user_id)
+
 
 class BookRecommendationListView(generics.ListAPIView):
     serializer_class = BookListSerializer
