@@ -50,7 +50,7 @@ class UserLogoutAPIView(GenericAPIView):
 
 class UserInfoAPIView(RetrieveAPIView):
     # Jesli zrobimy request i nie jestesmy authenticated otrzymamy error
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny, )
     serializer_class = CustomUSerSerializer
 
     #Nadpisanie metody by zwróciła zalogowane użytkownika
