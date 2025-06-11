@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import Review, Book, Author
+from .recommendations import recommend_books
 from .serializers import ReviewSerializer, BookListSerializer, BookDetailSerializer, AuthorSerializer
 
 class BookListView(generics.ListAPIView):
@@ -88,3 +89,14 @@ class UserReviewListView(generics.ListAPIView):
     def get_queryset(self):
         user_id = self.kwargs['user_id']
         return Review.objects.filter(user__id=user_id)
+
+class BookRecommendationListView(generics.ListAPIView):
+    serializer_class = BookListSerializer
+    permission_classes = [permissions.AllowAny]
+    from books.recommendations import recommend_books
+
+    def get_queryset(self):
+        #current_user = self.request.user
+        user_id = self.kwargs['user_id']
+        books = recommend_books(user_id)
+        return books

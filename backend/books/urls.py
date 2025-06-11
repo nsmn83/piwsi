@@ -1,6 +1,7 @@
 from django.urls import path
 
-from .views import BookReviewList, ReviewDetail, ReviewCreateView, ReviewUpdateView, BookListView, ReviewDeleteView, BookDetailView, AuthorDetailView
+from .views import BookReviewList, ReviewDetail, ReviewCreateView, ReviewUpdateView, BookListView, ReviewDeleteView, \
+    BookDetailView, AuthorDetailView, BookRecommendationListView
 from .views import UserReviewListView
 urlpatterns = [
 
@@ -30,6 +31,9 @@ urlpatterns = [
 
     #Lista recenzji użytkownika o podanym id
     path('user/<int:user_id>/reviews/', UserReviewListView.as_view(), name='user-reviews'),
+
+    #Lista rekomandacji dla użytkownika o podanym id
+    path('user/<int:user_id>/recommendations/', BookRecommendationListView.as_view(), name='user-recommendations'),
 
     #Rzeczy dotyczące edycji i wyswietlania profilu sa w acounts/urls.py
 ]
