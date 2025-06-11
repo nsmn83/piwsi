@@ -37,6 +37,7 @@ class ReviewWithBookSerializer(serializers.ModelSerializer):
 class BookDetailSerializer(serializers.ModelSerializer):
     author = AuthorSerializer(read_only=True)
     reviews = serializers.SerializerMethodField()
+    sentiment_summary = serializers.SerializerMethodField()
 
     class Meta:
         model = Book
@@ -45,6 +46,22 @@ class BookDetailSerializer(serializers.ModelSerializer):
     def get_reviews(self, obj):
         reviews = Review.objects.filter(book=obj)
         return ReviewSerializer(reviews, many=True).data
+
+    def get_sentiment_summary(self, obj):
+        reviews = Review.objects.filter(book=obj)
+        sentiment_counts = {
+            'positive': 0,
+            'negative': 0,
+            'neutral': 0
+        }
+
+        for review in reviews:
+            if review.sentiment in sentiment_counts:
+                sentiment_counts[review.sentiment] += 1
+
+        return sentiment_counts
+
+
 
 class ReviewSerializer(serializers.ModelSerializer):
     book = BookListSerializer(read_only=True)
