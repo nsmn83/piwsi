@@ -85,7 +85,7 @@ class AuthorDetailView(generics.RetrieveAPIView):
     permission_classes = [permissions.AllowAny]
 
 class UserReviewListView(generics.ListAPIView):
-    serializer_class = ReviewWithBookSerializer  # <-- tutaj
+    serializer_class = ReviewWithBookSerializer
     permission_classes = [permissions.AllowAny]
 
     def get_queryset(self):
