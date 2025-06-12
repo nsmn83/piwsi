@@ -12,6 +12,10 @@ urlpatterns = [
     #Publiczny profil - podstawowe informacje o uzytkowniku
     path("user/<int:pk>/", UserPublicInfoAPIView.as_view(), name="public-user-info"),
 
-    #Aktualizacja opisu użytkownika
+    #Aktualizacja opisu użytkownika - z jego uzyciem tez mozna zmienic profilowe
     path("user/edit-bio/", UpdateBioAPIView.as_view(), name="edit-bio"),
+
+    #URL strice do zmiany zdjecia
+    path("user/update-image/", UpdateProfileImageAPIView.as_view(), name="update-profile-image"),
+
 ]

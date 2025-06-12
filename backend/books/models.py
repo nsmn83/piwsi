@@ -19,6 +19,7 @@ class Book(models.Model):
     category = models.CharField(max_length=50, default="none")
     description = models.TextField(blank=True)
     published_date = models.DateField()
+    cover_url = models.URLField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.title} - {self.author}"

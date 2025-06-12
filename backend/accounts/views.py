@@ -68,3 +68,16 @@ class UpdateBioAPIView(UpdateAPIView):
 
     def get_object(self):
         return self.request.user
+
+class UpdateProfileImageAPIView(UpdateAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, *args, **kwargs):
+        profile_image_url = request.data.get("profile_image_url")
+        if not profile_image_url:
+            return Response({"error": "Brak URL-a!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        user = request.user
+        user.profile_image_url = profile_image_url
+        user.save()
+        return Response({"profile_image_url": user.profile_image_url}, status=status.HTTP_200_OK)

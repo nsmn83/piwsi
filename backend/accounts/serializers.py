@@ -6,7 +6,8 @@ from .models import CustomUser
 class CustomUSerSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ("id", "username", "email", "bio", "date_joined")
+        fields = ("id", "username", "email", "bio", "profile_image_url", "date_joined")
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     password1 = serializers.CharField(write_only=True)
