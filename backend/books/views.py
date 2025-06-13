@@ -16,7 +16,14 @@ class BookReviewList(generics.ListCreateAPIView):
 
     def get_queryset(self):
         book_id = self.kwargs['book_id']
-        return Review.objects.filter(book__id=book_id)
+        all_reviews = Review.objects.filter(book__id=book_id)
+
+        if self.request.user.is_authenticated:
+            user_review = all_reviews.filter(user=self.request.user)
+            other_reviews = all_reviews.exclude(user=self.request.user)
+            return list(user_review) + list(other_reviews)
+
+        return all_reviews
 
     def perform_create(self, serializer):
         book = Book.objects.get(id=self.kwargs['book_id'])

@@ -16,21 +16,35 @@ class Command(BaseCommand):
         Review.objects.all().delete()
         Book.objects.all().delete()
         Author.objects.all().delete()
-        #CustomUser.objects.all().delete()
+        CustomUser.objects.all().delete()
 
         first_names = [
             "Anna", "Bartek", "Cezary", "Daria", "Ewelina",
             "Filip", "Grzegorz", "Halina", "Igor", "Julia"
         ]
 
-        # Tworzenie użytkowników
-        for name in first_names:
+        profile_pics = [
+            "https://i.pinimg.com/736x/46/dc/70/46dc7029e43b2dab0a5c993cbecb7da3.jpg",
+            "https://content.imageresizer.com/images/memes/Doge-meme-4t0m5.jpg",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoVZuNX074cQMRxtib8LfqQ_UAUkovJEfV1g&s",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIEd2zxEc_4IQ1jHyniHLECu15zRjkHTBJzA&s",
+            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwVt7GXhBiT0pc3w7WGTadYixDB-V5dLHJqA&s",
+            "https://www.shutterstock.com/image-photo/profile-portrait-bengal-tiger-panthera-600nw-1953713884.jpg",
+            "https://static.vecteezy.com/system/resources/previews/022/216/912/non_2x/face-profile-images-illustration-in-flat-style-free-vector.jpg",
+            "https://i.pinimg.com/564x/51/c7/25/51c725e0a01212ff8e502281dda2a6dd.jpg",
+            "https://thumbs.dreamstime.com/b/portrait-faceless-wizard-isolated-vector-illustration-293078574.jpg",
+            "https://wallpapers.com/images/hd/profile-picture-8nn5taqcz5o8f2bz.jpg",
+        ]
+
+        # Tworzenie użytkowników z przypisanymi zdjęciami
+        for name, pic_url in zip(first_names, profile_pics):
             email = f"{name.lower()}@gmail.com"
             if not CustomUser.objects.filter(email=email).exists():
                 CustomUser.objects.create_user(
                     username=name.lower(),
                     email=email,
-                    password="test"
+                    password="test1234",
+                    profile_image_url=pic_url
                 )
 
         # Dane autorów
@@ -349,15 +363,18 @@ class Command(BaseCommand):
                     ["Magia tej książki wciąga od pierwszej strony!", "Bohaterowie są świetnie wykreowani.", "Czekam na kolejne przygody!"],
                     ["Niesamowita historia pełna czarów i tajemnic.", "Świat jest tak barwny, że czujesz się jego częścią.", "Polecam fanom fantasy!", "Zakończenie mnie zachwyciło."],
                     ["Fantastyczna podróż w magiczny świat!", "Każda strona trzyma w napięciu.", "Nie mogę się doczekać ekranizacji."],
+                    ["Ten świat, te postacie! Ta książka jest tak dobra, że chciałbym przeczytać ją ponownie po raz pierwszy."],
+                    ["Inne ksiażki fantasy mogą brać z niej przykład. Wzorowa książka. Szkoda, że taka krótka, bo dawno nie czytałem czegoś tak dobrego."]
                 ],
                 "negative": [
-                    ["Zbyt przewidywalna fabuła.", "Bohaterowie są płascy i mało interesujący.", "Spodziewałem się czegoś więcej - ogólnie nie polecam nikomu"],
-                    ["Ależ to było złe i nudne.", "Akcja ciągnie się w nieskończoność.", "Nie porwała mnie ta historia."],
-                    ["Rozczarowująca lektura.", "Zbyt wiele wątków, które nigdzie nie prowadzą.", "Nie polecam, jeśli szukasz czegoś nowego."],
+                    ["Zbyt przewidywalna fabuła, straszna nuda, chciałem odłożyć po pierwszych stronach"],
+                    ["Ależ to było złe i nudne.", "Akcja nie porywa. Takich książek nie powinni pisać!"],
+                    ["Rozczarowująca lektura - nie czuć klimatu, a świat przedstawiony pozostawia wiele do życzenia"],
+                    ["Nie polecam nikomu, ponieważ pomimo ciekawego świata przedstawionego brakuje w niej głębi, a historia jest nijaka."],
                 ],
                 "neutral": [
-                    ["Całkiem niezła historia, choć bez fajerwerków.", "Bohaterowie są w porządku, ale nie zapadają w pamięć.", "Ogólnie nic specjalnego."],
-                    ["Książka ma swoje momenty, ale nie wciąga na całego.", "Czytaj tylko jeśli się nudzisz.", "Może się spodobać, choć wątpie w to."],
+                    ["Książka jak książka - brakuje trochę rozwoju postaci."],
+                    ["Książka jest po prostu średnia.", "Czytaj tylko jeśli się nudzisz."],
                 ]
             },
             "dystopia": {
@@ -365,6 +382,7 @@ class Command(BaseCommand):
                     ["Przerażająco aktualna i wciągająca!", "Świat przedstawiony jest mroczny, ale fascynujący.", "Zmusza do myślenia."],
                     ["Genialna analiza totalitaryzmu!", "Bohaterowie są bardzo ludzcy i poruszający.", "Polecam każdemu!"],
                     ["Mocna opowieść, która zostaje w głowie.", "Napięcie budowane jest mistrzowsko.", "Świetna dystopia!"],
+                    ["Ma w sobie to co lubię w książkach najbardziej - mądry przekaz."],
                 ],
                 "negative": [
                     ["Zbyt przygnębiająca i monotonna.", "Bohaterowie działają mi na nerwy.", "Nie wciągnęła mnie."],
@@ -373,7 +391,7 @@ class Command(BaseCommand):
                 ],
                 "neutral": [
                     ["Ciekawa wizja przyszłości, ale nie dla wszystkich.", "Niektóre fragmenty są intrygujące, inne nużące.", "Warto spróbować, jeśli lubisz dystopie."],
-                    ["Historia ma potencjał, ale nie zawsze wciąga.", "Bohaterowie są średni, brak im głębi.", "Średnia lektura."],
+                    ["Historia nie zawsze wciąga.", "Bohaterowie są średni, brak im głębi.", "Średnia lektura."],
                 ]
             },
             "dramat": {
@@ -381,11 +399,14 @@ class Command(BaseCommand):
                     ["Głęboko poruszająca historia!", "Psychologiczne niuanse są mistrzowsko opisane.", "Klasyka, którą trzeba znać."],
                     ["Bohaterowie są tak realni, że czujesz ich emocje.", "Fabuła wciąga i zmusza do refleksji.", "Polecam z całego serca!"],
                     ["Niesamowita analiza ludzkiej duszy.", "Każde zdanie jest głęboko przemyślane.", "Warta każdej minuty."],
+                    ["To się nazywa prawdziwa sztuka! Mam nadzieję, że każdy podziela moje zdanie - jest to arcydzieło!"],
+                    ["Wciągająca od pierwszych stron - nic dziwnego, że zdobyła takie uznanie na świecie. Każdy powienien ją przeczytać chociaż raz"],
                 ],
                 "negative": [
                     ["Zbyt ciężka i przytłaczająca.", "Bohaterowie są irytujący.", "Nie dałem rady jej dokończyć."],
                     ["Historia jest nudna i rozwlekła.", "Filozoficzne rozważania są męczące.", "Nie polecam."],
                     ["Nic specjalnego, za dużo dramatyzmu.", "Postacie są jednowymiarowe.", "Szkoda czasu."],
+                    ["Nie chciałbym czytać tego drugi raz - tragedia, miałka fabuła, to nawet nie leżało obok porządnej książki."]
                 ],
                 "neutral": [
                     ["Ciekawa, ale wymaga skupienia.", "Niektóre fragmenty są świetne, inne zbyt gęste.", "Dla miłośników literatury psychologicznej.", "Mocno nijaka"],
@@ -397,15 +418,18 @@ class Command(BaseCommand):
                     ["Fascynująca podróż przez nieznane kultury!", "Autor opisuje wszystko z niezwykłą empatią.", "Czułem się, jakbym tam był."],
                     ["Wspaniałe reportaże, które otwierają oczy.", "Styl pisania jest bardzo plastyczny.", "Polecam miłośnikom podróży!"],
                     ["Niesamowite historie, które zostają w pamięci.", "Autor ma dar obserwacji.", "Rewelacyjna książka!"],
+                    ["Otwiera oczy i pozwala zdobywać nową wiedzę. Dawno nie czytałem czegoś tak przyjemnego i ciekawego"]
                 ],
                 "negative": [
                     ["Zbyt chaotyczne opowieści.", "Niektóre historie są nudne.", "Spodziewałem się więcej głębi."],
                     ["Reportaże są nierówne.", "Czasem za dużo szczegółów, za mało emocji.", "Nie wciągnęła mnie."],
                     ["Rozczarowujące, brak spójności.", "Autor za bardzo skupia się na szczegółach.", "Nie polecam."],
+                    ["Mam wrażenie, że autor nie ma pojęcia o czym pisze - gdybym wiedział na co się piszę, to w życiu bym jej nie kupił."]
                 ],
                 "neutral": [
-                    ["Ciekawe historie, ale nie zawsze wciągające.", "Niektóre rozdziały są świetne, inne przeciętne.", "Warto spróbować."],
-                    ["Reportaże są OK, ale nie porwały mnie.", "Autor ma ciekawy styl, ale temat nie dla mnie.", "Średnia lektura."],
+                    ["Średnia pozycja - chyba tylko tyle mogę powiedzieć."],
+                    ["Reportaże są OK, ale to nic wybitnego"],
+                    ["Ciężko mi ocenić tę książkę, ogólnie jest średnia. Ma swoje mocne i słabe strony"]
                 ]
             },
             "historyczna": {
@@ -413,6 +437,7 @@ class Command(BaseCommand):
                     ["Niesamowita podróż przez historię!", "Autor ożywia przeszłość w fascynujący sposób.", "Polecam każdemu miłośnikowi historii."],
                     ["Świetnie napisana, pełna szczegółów.", "Czyta się jak dobrą powieść.", "Dowiedziałem się mnóstwo nowego!"],
                     ["Kompleksowa i wciągająca!", "Każdy rozdział to nowa przygoda.", "Must-read dla fanów historii."],
+                    ["Czułem się jakbym przeniósł się w czasie - autor wie co robi i ma talen przedstawiania faktów w ciekawy sposób."],
                 ],
                 "negative": [
                     ["Zbyt dużo dat i faktów, za mało narracji.", "Nudna i przytłaczająca.", "Nie dla mnie."],
@@ -421,7 +446,8 @@ class Command(BaseCommand):
                 ],
                 "neutral": [
                     ["Ciekawa, ale wymaga cierpliwości.", "Niektóre fragmenty są świetne, inne zbyt szczegółowe.", "Dla fanów historii OK."],
-                    ["Całkiem niezła, ale nie wciąga na całego.", "Autor zna się na rzeczy, ale styl nie dla wszystkich.", "Średnia."],
+                    ["Całkiem niezła, ale brakuje ubarwnienia nudnych opisów. Mogłaby być troche przystępniejsza"],
+                    ["Dla mnie takie 6/10. Jest przeciętna."],
                 ]
             },
             "powieść": {
@@ -437,7 +463,8 @@ class Command(BaseCommand):
                 ],
                 "neutral": [
                     ["Całkiem przyjemna, ale bez rewelacji.", "Bohaterowie są OK, ale fabuła nierówna.", "Może się spodobać."],
-                    ["Historia ma potencjał, ale nie wciąga.", "Styl pisania jest poprawny, ale brak iskry.", "Średnia książka."],
+                    ["Historia ma potencjał, ale go nie wykorzystuje, drugi raz bym nie przeczytał, ale nie powiem, że jest jakaś tragiczna"],
+                    ["Książka ma swoich fanów, nie jestem jednym z nich, ale potrafię zauważyć co podoba się w niej innym. Osobiście nie polecam, bo brakuje trochę rozwoju postaci"],
                 ]
             },
             "powieść obyczajowa": {
@@ -461,6 +488,7 @@ class Command(BaseCommand):
                     ["Niesamowity świat przyszłości!", "Intrygi i technologia wciągają od pierwszej strony.", "Polecam fanom sci-fi!"],
                     ["Epicka opowieść o kosmosie!", "Bohaterowie są charyzmatyczni.", "Czekam na kolejne części!"],
                     ["Fascynująca wizja przyszłości.", "Autor genialnie buduje napięcie.", "Must-read dla miłośników gatunku!"],
+                    ["To się nazywa science-fiction. Mam nadzieję, że zachęcę innych do przeczytania. Wizja przyszłości jest intrygująca, postacie - nietuzinkowe."],
                 ],
                 "negative": [
                     ["Zbyt skomplikowana i chaotyczna.", "Bohaterowie są nieciekawi.", "Nie wciągnęła mnie."],
@@ -468,8 +496,8 @@ class Command(BaseCommand):
                     ["Rozczarowująca, brak spójności.", "Świat jest ciekawy, ale historia nudna.", "Nie polecam."],
                 ],
                 "neutral": [
-                    ["Ciekawa, ale nie dla każdego.", "Niektóre pomysły są świetne, inne przeciętne.", "Fani sci-fi mogą polubić."],
-                    ["Historia ma potencjał, ale nie wciąga na całego.", "Technologiczne detale są OK, ale fabuła nierówna.", "Średnia."],
+                    ["Ogólnie w porządku, wizja świata nie powala, mam mieszane odczucia"],
+                    ["Średniawka :/"],
                 ]
             }
         }
@@ -478,34 +506,34 @@ class Command(BaseCommand):
         users = list(CustomUser.objects.all())
         books = list(Book.objects.all())
 
-        # Słownik do śledzenia użytych recenzji dla każdej książki
+        # Słownik pomocniczy do kontrolowania użycia recenzji.
         used_reviews = {book.title: set() for book in books}
 
-        for user in users:
-            # Losowy wybór 10 książek dla każdego użytkownika
-            reviewed_books = random.sample(books, 10)
-            for book in reviewed_books:
-                # Wybór tonu recenzji (losowy)
+        for book in books:
+            # Losowanie uzytkowników
+            eligible_users = [user for user in users if not Review.objects.filter(user=user, book=book).exists()]
+            if len(eligible_users) < 7:
+                print(f"⚠️ Za mało użytkowników dla książki '{book.title}' — potrzebujesz co najmniej 7.")
+                continue  # lub raise Exception()
+
+            selected_users = random.sample(eligible_users, 7)
+            for user in selected_users:
                 tone = random.choice(["positive", "negative", "neutral"])
-                # Dostępne szablony dla kategorii i tonu
                 available_reviews = review_templates[book.category][tone]
-                # Filtrowanie nieużytych recenzji dla tej książki
+                # Pominięcie recenzji, które już się pojawiły przy danej książce
                 available_reviews = [
                     r for r in available_reviews
                     if tuple(r) not in used_reviews[book.title]
                 ]
                 if not available_reviews:
-                    # Jeśli brak dostępnych unikalnych recenzji, używamy losowej
                     available_reviews = review_templates[book.category][tone]
-                # Wybór losowej recenzji
+
                 review_sentences = random.choice(available_reviews)
-                # Dodanie recenzji do użytych
                 used_reviews[book.title].add(tuple(review_sentences))
-                # Połączenie zdań w jedną recenzję
                 content = " ".join(review_sentences)
-                if not Review.objects.filter(user=user, book=book).exists():
-                    Review.objects.create(
-                        user=user,
-                        book=book,
-                        content=content
-                    )
+
+                Review.objects.create(
+                    user=user,
+                    book=book,
+                    content=content
+                )
